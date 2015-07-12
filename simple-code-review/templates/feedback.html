@@ -36,6 +36,10 @@
       width: 100%; 
       overflow: auto;
     }
+    
+    .codeline:hover .lineno {
+      color: #111;
+    }
 
     .codeline {
         overflow: hidden;
@@ -51,6 +55,13 @@
         border-left: 4px solid #111;
         border-right: 1px solid #e0e0e0;
         text-align: right;
+        transition: color 0.25s ease;
+        -webkit-touch-callout: none;
+          -webkit-user-select: none;
+           -khtml-user-select: none;
+             -moz-user-select: none;
+              -ms-user-select: none;
+                  user-select: none;
     }
 
     .lineno > span {

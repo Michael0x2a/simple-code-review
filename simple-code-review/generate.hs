@@ -135,9 +135,11 @@ lineTemplate =
    
 timestamp :: IO String
 timestamp = do 
-    let tz = hoursToTimeZone (-7)
+    tz <- getCurrentTimeZone
     time <- getCurrentTime
-    return $ formatTime defaultTimeLocale "%c" (utcToZonedTime tz time)
+    return $ formatTime defaultTimeLocale formatStr (utcToZonedTime tz time)
+    where 
+        formatStr = "%A, %B %Y at %l:%M:%S %p, %Z"
 
 lineToHtml :: String -> Line -> String
 lineToHtml lang (Line lineNo code commentary) 
