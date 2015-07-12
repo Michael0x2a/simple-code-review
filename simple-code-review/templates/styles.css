@@ -9,7 +9,9 @@ body {
 
 .wrapper {
   display: block;
-  width:100%;
+  min-width: 40em;
+  max-width: 60em;
+  margin: 0 auto;
 }
 
 .line {
@@ -18,20 +20,28 @@ body {
   overflow: auto;
 }
 
-.commentary {
-  width: 40%;
-  float: left;
-  padding: 0em 1em;
+.codeline {
+    overflow: hidden;
 }
 
-.commentary pre {
-  display: block;
+.lineno {
+    font-family: Consolas,Monaco,"Andale Mono",monospace;
+    padding: 0.5em;
+    width: 2.7em;
+    float: left;
+    color: #ccc;
+    background-color: #f5f2f0;
+    border-left: 4px solid #111;
+    border-right: 1px solid #e0e0e0;
+    text-align: right;
 }
 
-.line > pre {
-  width: 60%;
-  float: left;
-  border-left: 4px solid black;
+.lineno > span {
+    font-size: 0.8em;
+}
+
+.line:hover .lineno > span {
+    font-weight: bold;
 }
 
 pre[class*="language-"] {
@@ -43,6 +53,19 @@ pre[class*="language-"] > code[data-language] {
   overflow: hidden;
 }
 
+.commentary {
+  width: 100%;
+  padding-left: 3.2em;
+}
+
+.annotated .commentary {
+  padding-bottom: 1em;
+}
+
+.commentary pre {
+  display: block;
+}
+
 code:before {
   display: none !important;
 }
@@ -50,29 +73,4 @@ code:before {
 p {
   padding: 0em;
   margin: 0.5em;
-}
-
-hr {
-  border: none;
-  height: 1px;
-  background-color:#eee;
-  margin:0;
-}
-
-@media screen and (max-width: 1420px) { 
-  .wrapper {
-    max-width: 57em;
-    margin: 0 auto;
-  }
-  .line > pre {
-    float: none;
-    width: 100%;
-  }
-  .commentary {
-    float: none;
-    width: 100%;
-  }
-  hr {
-    display: none;
-  }
 }
