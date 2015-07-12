@@ -135,8 +135,9 @@ lineTemplate =
    
 timestamp :: IO String
 timestamp = do 
+    let tz = hoursToTimeZone (-7)
     time <- getCurrentTime
-    return $ formatTime defaultTimeLocale "%c" time
+    return $ formatTime defaultTimeLocale "%c" (utcToZonedTime tz time)
 
 lineToHtml :: String -> Line -> String
 lineToHtml lang (Line lineNo code commentary) 
