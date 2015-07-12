@@ -6,6 +6,9 @@ import System.IO
 import Data.List
 import Data.List.Split
 import Data.String.Utils
+import Data.Time
+import Data.Time.LocalTime
+import Data.Time.Format
 
 import Text.Format
 import Text.Pandoc
@@ -129,7 +132,11 @@ lineTemplate =
     \    </div>\n\
     \    <div class=\"commentary\">{4}</div>\n\
     \  </div>"
-    
+   
+timestamp :: IO String
+timestamp = do 
+    time <- getCurrentTime
+    return $ formatTime defaultTimeLocale "%c" time
 
 lineToHtml :: String -> Line -> String
 lineToHtml lang (Line lineNo code commentary) 
@@ -139,9 +146,9 @@ lineToHtml lang (Line lineNo code commentary)
         args :: [String]
         args = [(show lineNo), lang, code, commentary]
 
-linesToHtml :: String -> String -> String -> [Line] -> String
-linesToHtml template title lang lines = 
-    format template [title, intercalate "\n" (map (lineToHtml lang) lines)]
+linesToHtml :: String -> String -> String -> String -> [Line] -> String
+linesToHtml template title lang timestamp lines = 
+    format template [title, timestamp, intercalate "\n" (map (lineToHtml lang) lines)]
 
 
 -- Commands
@@ -151,12 +158,13 @@ generate lang title sourcePath feedbackPath outputPath = do
     rawCode <- readFile sourcePath
     rawFeedback <- readFile feedbackPath
     template <- readFile "templates/feedback.html"
+    now <- timestamp
 
     let code = parseCode rawCode
     let feedback = parseFeedback rawFeedback
     let lines = bundle code feedback
 
-    writeFile outputPath (linesToHtml template title lang lines)
+    writeFile outputPath (linesToHtml template title lang now lines)
 
 usage :: IO ()
 usage = putStrLn usageText

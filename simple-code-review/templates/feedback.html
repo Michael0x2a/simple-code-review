@@ -4,13 +4,152 @@
   <meta charset="utf-8">
   <title>{0}</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" rel="stylesheet" />
-  <link href="templates/styles.css" rel="stylesheet" />
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      padding:1em;
+      font-family: Arial Narrow, Arial, sans-serif; 
+    }
+
+    .wrapper {
+      display: block;
+      min-width: 40em;
+      max-width: 60em;
+      margin: 0 auto;
+    }
+
+    h1 {
+        margin-bottom: 0.25em;
+    }
+
+    h1 + p {
+        margin-bottom: 2em;
+        margin-left: 0;
+        color: #888;
+    }
+
+    .line {
+      display: block;
+      width: 100%; 
+      overflow: auto;
+    }
+
+    .codeline {
+        overflow: hidden;
+    }
+
+    .lineno {
+        font-family: Consolas,Monaco,"Andale Mono",monospace;
+        padding: 0.25em; 0.5em;
+        width: 2.7em;
+        float: left;
+        color: #888;
+        background-color: #f5f2f0;
+        border-left: 4px solid #111;
+        border-right: 1px solid #e0e0e0;
+        text-align: right;
+    }
+
+    .lineno > span {
+        font-size: 0.8em;
+    }
+
+    .line:hover .lineno > span {
+        font-weight: bold;
+    }
+
+    pre[class*="language-"] {
+      margin: 0;
+      padding: 0.25em 1em;
+    }
+
+    pre[class*="language-"] > code[data-language] {
+      overflow: hidden;
+    }
+
+    .button {
+      position: relative;
+      width: 2.7em;
+      padding: 0.2em 0.2em;
+      padding-left: 0.4em;
+      cursor: pointer;
+      z-index: 5;
+      margin-top: 0.1em;
+      font-weight: 700;
+      color: #888;
+      transition: color 0.25s ease;
+    }
+
+    .button:hover {
+       color: #111;
+    }
+
+    .button span {
+      font-size: 0.7em;
+    }
+
+    .commentary {
+      position: relative;
+      padding-left: 3.2em;
+      overflow: hidden;
+    }
+
+    .annotated .commentary {
+      padding-bottom: 1em;
+      margin-top: -1.5em;
+    }
+
+    .commentary pre {
+      display: block;
+    }
+
+    .commentary pre:last-child {
+      margin-bottom: 1em;
+    }
+
+    code:before {
+      display: none !important;
+    }
+
+    p {
+      padding: 0em;
+      margin: 0.5em;
+    }
+
+  </style>
 </head>
 <body>
 <div class="wrapper">
   <h1>{0}</h1>
-  <div class="feedback">{1}</div>
+  <p>(Generated on {1})</p>
+  <div class="feedback">{2}</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    function createButton(element) {
+      var button = $('<div class="button"><span>Hide</span></div>');
+      button.click(function() {
+        element.toggle(250);
+        if (button.text() == "Hide") {
+          button.html("<span>Show</span>");
+        } else {
+          button.html("<span>Hide</span>");
+        }
+      });
+      return button;
+    }
+  
+    function insertToggle(index, element) {
+      $(element).before(createButton($(element)));
+    }
+  
+    $(".annotated .commentary").each(insertToggle);
+  });
+</script>
 </body>
 </html>

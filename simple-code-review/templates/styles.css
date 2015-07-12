@@ -14,6 +14,16 @@ body {
   margin: 0 auto;
 }
 
+h1 {
+    margin-bottom: 0.25em;
+}
+
+h1 + p {
+    margin-bottom: 2em;
+    margin-left: 0;
+    color: #888;
+}
+
 .line {
   display: block;
   width: 100%; 
@@ -26,10 +36,10 @@ body {
 
 .lineno {
     font-family: Consolas,Monaco,"Andale Mono",monospace;
-    padding: 0.5em;
+    padding: 0.25em; 0.5em;
     width: 2.7em;
     float: left;
-    color: #ccc;
+    color: #888;
     background-color: #f5f2f0;
     border-left: 4px solid #111;
     border-right: 1px solid #e0e0e0;
@@ -46,24 +56,51 @@ body {
 
 pre[class*="language-"] {
   margin: 0;
-  padding: 0.5em 1em;
+  padding: 0.25em 1em;
 }
 
 pre[class*="language-"] > code[data-language] {
   overflow: hidden;
 }
 
+.button {
+  position: relative;
+  width: 2.7em;
+  padding: 0.2em 0.2em;
+  padding-left: 0.4em;
+  cursor: pointer;
+  z-index: 5;
+  margin-top: 0.1em;
+  font-weight: 700;
+  color: #888;
+  transition: color 0.25s ease;
+}
+
+.button:hover {
+   color: #111;
+}
+
+.button span {
+  font-size: 0.7em;
+}
+
 .commentary {
-  width: 100%;
+  position: relative;
   padding-left: 3.2em;
+  overflow: hidden;
 }
 
 .annotated .commentary {
   padding-bottom: 1em;
+  margin-top: -1.5em;
 }
 
 .commentary pre {
   display: block;
+}
+
+.commentary pre:last-child {
+  margin-bottom: 1em;
 }
 
 code:before {

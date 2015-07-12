@@ -1,0 +1,277 @@
+Line 1:
+    
+    In Python, when you want to document a file, class, method, or function of any sort, you should use a [docstring](https://www.python.org/dev/peps/pep-0257/) instead of a regular comment. For example, here's how you might document a function using a docstring:
+    
+    ```python
+    def my_function(foo):
+        """
+        Within this string, you can leave documentation of any sort. 
+        Note that this docstring goes _inside_ the function, not before, 
+        which is in contrast to how you comment your code in Java.
+        
+            Any indentation is relative to the start of the multi-line string.
+            
+        ...which makes formatting more convenient.
+        """
+        print(foo)
+        
+    def my_other_function(bar):
+        "The docstring doesn't need to be a multi-line string. Regular strings also work."
+        print(bar)
+    ```
+            
+    By itself, a docstring just looks like a regular string. However, whenever you leave a regular string at the start of a function, class, file, etc, Python will automatically make that string available at runtime:
+    
+    ```python
+    >>> print(my_other_function.__doc__)
+    The docstring doesn't need to be a multi-line string. Regular strings also work.
+    
+    >>> help(my_function)
+    Within this string, you can leave documentation of any sort. 
+    Note that this docstring goes _inside_ the function, not before, 
+    which is in contrast to how you comment your code in Java.
+    
+        Any indentation is relative to the start of the multi-line string.
+        
+    Wheeee
+    ```
+    
+    So, that means that the start of your Python file should look more like this:
+    
+    ```python
+    """
+    Python Script to Download the most upvoted image on certain subreddits to directory on the computer.
+    """
+    
+    import os, requests, json, time, datetime, threading, re 
+    ```
+    
+Line 7:
+
+    Several issues here:
+    
+    1. In Python, the convention for variable, function, and method names is to have everything in lowercase, separated by underscores. Your function name here should be `add_imgur_ext`. (Constants and classes have the same naming conventions as Java).
+    2. You have some spacing issues around your plus signs.
+    3. It looks like you're using tabs for indentation. In Python, the convention is to always prefer spaces over tabs, and use 4 spaces per indent.
+    4. This would be a good place to do some basic string formatting instead of string concatenation. 
+    
+        ```python
+        return '{prototol}i.{url}.jpg'.format(protocol=url[0:7], url=url[7:])
+        ```
+        
+        I'm also assuming that the first 7 characters are always `http://`. In that case, might as well bake them in:
+        
+        ```python
+        return 'http://i.{url}.jpg'.format(url=url[7:])
+        ```
+    
+        (why use string formatting over just string concatenation? It usually looks neater.)
+        
+Line 10:
+
+    A slightly better name might be 'sanitize'. The word `remove` is a bit ambiguous/isn't clear in expressing what the function does.
+        
+Line 11:
+
+    A simpler way of expressing this is:
+    
+    ```python
+    illegalChar = '<>:"\\/|?*'
+    ```
+    
+    In Python, you can slice and dice a string the same way you do a list (though similar to Java, Strings in Python are immutable).
+    
+    Also note that since you chose to use the single quotes for this string, you don't need to escape the double-quote character.
+    
+    You might also want to consider converting it into a set to get $O(1)$ lookup. Your string is small enough that the speedup is probably insignificant, but this is what it would look like:
+    
+    ```python
+    illegalChar = set('<>:"\\/|?*')
+    ```
+    
+Line 17:
+    
+    I don't quite recall if we explicitly covered this in CSE 143, but repeatedly doing string concatenation turns out to be an $O(n^2)$ operation. (Every time you concat together two strings, you have to produce a new string + copy both values over).
+    
+    In Java, the idiomatic way to do this in $O(n)$ time is to use the [StringBuilder](http://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html) class and do something like this:
+    
+    ```java
+    StringBuilder builder = new StringBuilder();
+    for (String x : xs) {
+        builder.add(s);
+    }
+    String finalString = builder.toString()
+    ```
+    
+    In Python, the idiomatic way is to repeatedly append the string to the end of the list, then use the `join` operation at the very end:
+    
+    ```python
+    output = []
+    for letter in title:
+        if letters in illegalChar:
+            output.append(' ')
+        else:
+            output.append(letter)
+    newTitle = ''.join(output)  # combine all strings in output, separated by 
+                                # the empty string. str.join is O(n).
+    ```
+    
+    However, this is a bit clunky-looking. We can make this slightly shorter by using _inline if statements_:
+    
+    ```python
+    output = []
+    for letter in title:
+        output.append(' ' if letters in illegalChar else letter)
+    newTitle = ''.join(output)
+    ```
+    
+    It turns out that we can make this even _shorter_ by using something called [list comprehensions](http://python-3-patterns-idioms-test.readthedocs.org/en/latest/Comprehensions.html), which is basically a way of building up a list in a single line:
+    
+    ```python
+    output = [' ' if letters in illegalChar else letter for letter in title]
+    newTitle = ''.join(output)
+    
+    # Or even shorter:
+    
+    newTitle = ''.join([' ' if letters in illegalChar else letter for letter in title])
+    ```
+    
+    ...and if you wanted, you could push this even further so you get a one-liner.
+    
+Line 22:
+
+    The reason for this is that Reddit will rate-limit the requests you send it -- it will only respond to a certain number of requests in a given interval to prevent people from intentionally or unintentionally DOS-ing the website. (More specifically, according to their documentation, you're permitted only [30 requests per minute](https://github.com/reddit/reddit/wiki/API)).
+    
+    In fact, it turns out that Reddit will rate-limit even more aggressively if you make Python directly try and grab content without setting the user agent to some custom string.
+    
+    If you aren't aware, the user agent string is a part of the headers you send with the request, and informs the server what kind of program made the request. For example, Chrome sends the following user agent every time you tell it to load a webpage: `Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36`.
+    
+    (Why does this user agent string look so insane/stupid? It's a [long and sad story](http://webaim.org/blog/user-agent-string-history/)).
+    
+    In any case, to set the user agent header while using `requests`, do something like this:
+    
+    ```python
+    headers = {
+        'User-Agent': 'windows:my-reddit-app:v0.1.0 (by <reddit-username>)'
+    }
+    response = requests.get('...', headers=headers)
+    ```
+    
+    (You can make the user agent be any arbitrary string, but this the format that reddit's API documentation recommends).
+    
+Line 29:
+
+    Your error message is a little confusing here, since in the context of this function you're not actually requesting anything again.
+    
+Line 49:
+
+    Rather then explicitly indexing, just foreach over the list directly:
+    
+    ```python
+    for post in json['data']['children']:
+        name = post['data']['title'] + jpg
+        
+        # ...
+    ```
+    
+Line 62:
+
+    It might be a good idea to try refactoring lines 59-62 into a seperate helper function.
+    
+Line 65:
+
+    You've done this same pattern (send an HTTP GET request, then raise for the status) a few times now. It might be good to refactor this as well. (That way, you can also keep your user agent code in one place).
+    
+Line 75:
+    
+    Likewise, consider refactoring lines 64 through 75.
+    
+Line 81:
+    
+    Rather then spamming the website and catching exceptions, it _may_ be cleaner to instead research and find out what the rate limits for imgur and flickr are and explicitly add in a delay to avoid running afoul of those rate limits.
+    
+Line 105:
+
+    Note that this line is doing basically the same thing as line 85 -- you should consider refactoring this out int oa separate helper.
+    
+Line 110:
+
+    Just as a note -- when making folder and file names, especially ones you intend on interacting with programatically, you should avoid including spaces in your file paths whenever possible. 
+    
+    If you're running programs on the command line, you have to escape or explicitly quote any paths that include spaces, which can be a bit of a pain in the ass. 
+    
+    In this case, including spaces isn't really terribly important, but it's good to keep this in mind.
+    
+    (Also, consider refactoring lines 108-110, since they appear to be doing a concrete task).
+    
+Line 115:
+
+    Rather then creating a separate thread per subreddit, a different strategy might be to first split the images up into imgur links and flickr links, and launch a separate thread to deal with each website separately. That way, you can explicitly control how frequently you hit each website + won't run afoul of the rate limits.
+    
+    (From a design perspective, it'll also force you to separate the task of transforming a url into a image link and actually downloading said image, which is good).
+    
+    Also, it might be nice to include a constant at the top of the file that includes the subreddits you want to visit, then use a list comprehension here. Example:
+    
+    ```python
+    SUBREDDIT_NAMES = ['earthporn', 'villageporn']
+    
+    # ...
+    
+    subreddits = [createThread(name) for name in SUBREDDIT_NAMES]
+    ```
+    
+Line 132:
+
+    When programming, you'll often run into the following pattern:
+    
+    ```python
+    open/setup
+    do something
+    close/cleanup
+    ```
+    
+    You can see this sort of pattern from anything ranging from interacting with databases, to sockets, to files. As it turns out, always having to open then remember to close gets a bit tedious (and easy to forget to do).
+    
+    The Python developers saw that this was such a common pattern that they came up with a feature explicitly designed to help remove this boiler plate. This feature is called a _context manager_. It looks sort of like this:
+    
+    ```python
+    with [open/setup something] as handle:
+        do something
+    # automatically closed/cleaned up
+    ```
+    
+    
+    More specifically, when reading and writing from a file, you can use context managers like so:
+    
+    ```python
+    with open('Log.txt', 'a') as logFile:
+        logFile.write('\nStarted download at: '+ startTimeP)
+        logFile.write('\nDownloading took: ' + str(round(endTime-startTime, 2)) + ' seconds.')
+        logFile.write('\n'+''.center(80,'-'))
+    ```
+    
+    Once you leave the `with` block, the file will automatically be closed for you. Generally, it is strongly recommended that you use this form whenever possible, unless you have an explicit reason as to why you can't.
+    
+    (As it turns out, Java also has a similar language feature called [try-with-resources](https://docs.oracle.com/javase/7/docs/technotes/guides/language/try-with-resources.html))
+    
+Line 135:
+
+    In Python, when you want to run some code in a file, the usual convention is to structure your code as follows:
+    
+    ```python
+    # helper functions and classes here
+    
+    def main():
+        # code here
+        
+    if __name__ == '__main__':
+        main()
+    ```
+    
+    Basically, have everything inside the main method, and call it within that if statement. What exactly that if statement does looks a bit confusing, but what it basically does is run the `main()` function if and only if you're running your python script directly. (If you import the script as a library, the main function won't be automatically executed).
+    
+    More specifically, the `__name__` variable is a variable that is automatically set by the Python interpreter. If you do `python my_file.py` from the command line, the `__name__` variable inside `my_file.py` will be set to the string `'__main__'`. In contrast, if you were to import `my_file` from some other script, the `__name__` variable inside `my_file` when it's being imported will be set to something else.
+    
+    What this idiom does is let your file be used both as something you can directly run, and as a library, where you don't want to automatically run code.. 
+    
+   

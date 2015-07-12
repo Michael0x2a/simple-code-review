@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Feedback: downloadRedditImages.py</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.css" rel="stylesheet" />
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      padding:1em;
+      font-family: Arial Narrow, Arial, sans-serif; 
+    }
+
+    .wrapper {
+      display: block;
+      min-width: 40em;
+      max-width: 60em;
+      margin: 0 auto;
+    }
+
+    h1 {
+        margin-bottom: 0.25em;
+    }
+
+    h1 + p {
+        margin-bottom: 2em;
+        margin-left: 0;
+        color: #888;
+    }
+
+    .line {
+      display: block;
+      width: 100%; 
+      overflow: auto;
+    }
+
+    .codeline {
+        overflow: hidden;
+    }
+
+    .lineno {
+        font-family: Consolas,Monaco,"Andale Mono",monospace;
+        padding: 0.25em; 0.5em;
+        width: 2.7em;
+        float: left;
+        color: #888;
+        background-color: #f5f2f0;
+        border-left: 4px solid #111;
+        border-right: 1px solid #e0e0e0;
+        text-align: right;
+    }
+
+    .lineno > span {
+        font-size: 0.8em;
+    }
+
+    .line:hover .lineno > span {
+        font-weight: bold;
+    }
+
+    pre[class*="language-"] {
+      margin: 0;
+      padding: 0.25em 1em;
+    }
+
+    pre[class*="language-"] > code[data-language] {
+      overflow: hidden;
+    }
+
+    .button {
+      position: relative;
+      width: 2.7em;
+      padding: 0.2em 0.2em;
+      padding-left: 0.4em;
+      cursor: pointer;
+      z-index: 5;
+      margin-top: 0.1em;
+      font-weight: 700;
+      color: #888;
+      transition: color 0.25s ease;
+    }
+
+    .button:hover {
+       color: #111;
+    }
+
+    .button span {
+      font-size: 0.7em;
+    }
+
+    .commentary {
+      position: relative;
+      padding-left: 3.2em;
+      overflow: hidden;
+    }
+
+    .annotated .commentary {
+      padding-bottom: 1em;
+      margin-top: -1.5em;
+    }
+
+    .commentary pre {
+      display: block;
+    }
+
+    .commentary pre:last-child {
+      margin-bottom: 1em;
+    }
+
+    code:before {
+      display: none !important;
+    }
+
+    p {
+      padding: 0em;
+      margin: 0.5em;
+    }
+
+  </style>
+</head>
+<body>
+<div class="wrapper">
+  <h1>Feedback: downloadRedditImages.py</h1>
+  <p>(Generated on Sun Jul 12 05:46:04 UTC 2015)</p>
+  <div class="feedback">  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>1</span></div>
+      <pre><code class="language-python"># Python Script to Download the most upvoted image on certain subreddits to directory on the computer.</code></pre>
+    </div>
+    <div class="commentary"><p>In Python, when you want to document a file, class, method, or function of any sort, you should use a <a href="https://www.python.org/dev/peps/pep-0257/">docstring</a> instead of a regular comment. For example, here's how you might document a function using a docstring:</p>
+<pre><code class="language-python">def my_function(foo):
+    &quot;&quot;&quot;
+    Within this string, you can leave documentation of any sort. 
+    Note that this docstring goes _inside_ the function, not before, 
+    which is in contrast to how you comment your code in Java.
+    
+        Any indentation is relative to the start of the multi-line string.
+        
+    ...which makes formatting more convenient.
+    &quot;&quot;&quot;
+    print(foo)
+    
+def my_other_function(bar):
+    &quot;The docstring doesn&#39;t need to be a multi-line string. Regular strings also work.&quot;
+    print(bar)</code></pre>
+<p>By itself, a docstring just looks like a regular string. However, whenever you leave a regular string at the start of a function, class, file, etc, Python will automatically make that string available at runtime:</p>
+<pre><code class="language-python">&gt;&gt;&gt; print(my_other_function.__doc__)
+The docstring doesn&#39;t need to be a multi-line string. Regular strings also work.
+
+&gt;&gt;&gt; help(my_function)
+Within this string, you can leave documentation of any sort. 
+Note that this docstring goes _inside_ the function, not before, 
+which is in contrast to how you comment your code in Java.
+
+    Any indentation is relative to the start of the multi-line string.
+    
+Wheeee</code></pre>
+<p>So, that means that the start of your Python file should look more like this:</p>
+<pre><code class="language-python">&quot;&quot;&quot;
+Python Script to Download the most upvoted image on certain subreddits to directory on the computer.
+&quot;&quot;&quot;
+
+import os, requests, json, time, datetime, threading, re </code></pre></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>2</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>3</span></div>
+      <pre><code class="language-python">import os, requests, json, time, datetime, threading, re </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>4</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>5</span></div>
+      <pre><code class="language-python"># Add i and .jpg to imgur.com url's</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>6</span></div>
+      <pre><code class="language-python">def add_ImgurExt(url):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>7</span></div>
+      <pre><code class="language-python">	return url[0:7] + 'i.'+url[7:]+'.jpg'</code></pre>
+    </div>
+    <div class="commentary"><p>Several issues here:</p>
+<ol style="list-style-type: decimal">
+<li>In Python, the convention for variable, function, and method names is to have everything in lowercase, separated by underscores. Your function name here should be <code>add_imgur_ext</code>. (Constants and classes have the same naming conventions as Java).</li>
+<li>You have some spacing issues around your plus signs.</li>
+<li>It looks like you're using tabs for indentation. In Python, the convention is to always prefer spaces over tabs, and use 4 spaces per indent.</li>
+<li><p>This would be a good place to do some basic string formatting instead of string concatenation.</p>
+<pre><code class="language-python">return &#39;{prototol}i.{url}.jpg&#39;.format(protocol=url[0:7], url=url[7:])</code></pre>
+<p>I'm also assuming that the first 7 characters are always <code>http://</code>. In that case, might as well bake them in:</p>
+<pre><code class="language-python">return &#39;http://i.{url}.jpg&#39;.format(url=url[7:])</code></pre>
+<p>(why use string formatting over just string concatenation? It usually looks neater.)</p></li>
+</ol></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>8</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>9</span></div>
+      <pre><code class="language-python"># Function to remove illegal characters for filenames and replace them with spaces</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>10</span></div>
+      <pre><code class="language-python">def remove(title):</code></pre>
+    </div>
+    <div class="commentary"><p>A slightly better name might be 'sanitize'. The word <code>remove</code> is a bit ambiguous/isn't clear in expressing what the function does.</p></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>11</span></div>
+      <pre><code class="language-python">	illegalChar = ['&lt;','&gt;',':','\"','\\','/','|','?','*']</code></pre>
+    </div>
+    <div class="commentary"><p>A simpler way of expressing this is:</p>
+<pre><code class="language-python">illegalChar = &#39;&lt;&gt;:&quot;\\/|?*&#39;</code></pre>
+<p>In Python, you can slice and dice a string the same way you do a list (though similar to Java, Strings in Python are immutable).</p>
+<p>Also note that since you chose to use the single quotes for this string, you don't need to escape the double-quote character.</p>
+<p>You might also want to consider converting it into a set to get <span class="math inline"><em>O</em>(1)</span> lookup. Your string is small enough that the speedup is probably insignificant, but this is what it would look like:</p>
+<pre><code class="language-python">illegalChar = set(&#39;&lt;&gt;:&quot;\\/|?*&#39;)</code></pre></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>12</span></div>
+      <pre><code class="language-python">	newTitle = ''</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>13</span></div>
+      <pre><code class="language-python">	for letter in title:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>14</span></div>
+      <pre><code class="language-python">		if letter in illegalChar:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>15</span></div>
+      <pre><code class="language-python">			newTitle += ' '</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>16</span></div>
+      <pre><code class="language-python">		else:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>17</span></div>
+      <pre><code class="language-python">			newTitle += letter</code></pre>
+    </div>
+    <div class="commentary"><p>I don't quite recall if we explicitly covered this in CSE 143, but repeatedly doing string concatenation turns out to be an <span class="math inline"><em>O</em>(<em>n</em><sup>2</sup>)</span> operation. (Every time you concat together two strings, you have to produce a new string + copy both values over).</p>
+<p>In Java, the idiomatic way to do this in <span class="math inline"><em>O</em>(<em>n</em>)</span> time is to use the <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html">StringBuilder</a> class and do something like this:</p>
+<pre><code class="language-java">StringBuilder builder = new StringBuilder();
+for (String x : xs) {
+    builder.add(s);
+}
+String finalString = builder.toString()</code></pre>
+<p>In Python, the idiomatic way is to repeatedly append the string to the end of the list, then use the <code>join</code> operation at the very end:</p>
+<pre><code class="language-python">output = []
+for letter in title:
+    if letters in illegalChar:
+        output.append(&#39; &#39;)
+    else:
+        output.append(letter)
+newTitle = &#39;&#39;.join(output)  # combine all strings in output, separated by 
+                            # the empty string. str.join is O(n).</code></pre>
+<p>However, this is a bit clunky-looking. We can make this slightly shorter by using <em>inline if statements</em>:</p>
+<pre><code class="language-python">output = []
+for letter in title:
+    output.append(&#39; &#39; if letters in illegalChar else letter)
+newTitle = &#39;&#39;.join(output)</code></pre>
+<p>It turns out that we can make this even <em>shorter</em> by using something called <a href="http://python-3-patterns-idioms-test.readthedocs.org/en/latest/Comprehensions.html">list comprehensions</a>, which is basically a way of building up a list in a single line:</p>
+<pre><code class="language-python">output = [&#39; &#39; if letters in illegalChar else letter for letter in title]
+newTitle = &#39;&#39;.join(output)
+
+# Or even shorter:
+
+newTitle = &#39;&#39;.join([&#39; &#39; if letters in illegalChar else letter for letter in title])</code></pre>
+<p>...and if you wanted, you could push this even further so you get a one-liner.</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>18</span></div>
+      <pre><code class="language-python">	return newTitle</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>19</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>20</span></div>
+      <pre><code class="language-python"># Function to get JSON off a subreddit. Make sure subreddit exists</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>21</span></div>
+      <pre><code class="language-python">def get_RedditJSON(subreddit):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>22</span></div>
+      <pre><code class="language-python">	#Sometimes reddit request returns Error 429. </code></pre>
+    </div>
+    <div class="commentary"><p>The reason for this is that Reddit will rate-limit the requests you send it -- it will only respond to a certain number of requests in a given interval to prevent people from intentionally or unintentionally DOS-ing the website. (More specifically, according to their documentation, you're permitted only <a href="https://github.com/reddit/reddit/wiki/API">30 requests per minute</a>).</p>
+<p>In fact, it turns out that Reddit will rate-limit even more aggressively if you make Python directly try and grab content without setting the user agent to some custom string.</p>
+<p>If you aren't aware, the user agent string is a part of the headers you send with the request, and informs the server what kind of program made the request. For example, Chrome sends the following user agent every time you tell it to load a webpage: <code>Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36</code>.</p>
+<p>(Why does this user agent string look so insane/stupid? It's a <a href="http://webaim.org/blog/user-agent-string-history/">long and sad story</a>).</p>
+<p>In any case, to set the user agent header while using <code>requests</code>, do something like this:</p>
+<pre><code class="language-python">headers = {
+    &#39;User-Agent&#39;: &#39;windows:my-reddit-app:v0.1.0 (by &lt;reddit-username&gt;)&#39;
+}
+response = requests.get(&#39;...&#39;, headers=headers)</code></pre>
+<p>(You can make the user agent be any arbitrary string, but this the format that reddit's API documentation recommends).</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>23</span></div>
+      <pre><code class="language-python">	try:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>24</span></div>
+      <pre><code class="language-python">		res = requests.get('https://www.reddit.com/r/{0}.json'.format(subreddit))</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>25</span></div>
+      <pre><code class="language-python">		res.raise_for_status()</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>26</span></div>
+      <pre><code class="language-python">		return json.loads(res.text)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>27</span></div>
+      <pre><code class="language-python">	#Recall function if json is not received.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>28</span></div>
+      <pre><code class="language-python">	except requests.HTTPError:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>29</span></div>
+      <pre><code class="language-python">		print('Error: 429, requesting again', end ='\n\n')</code></pre>
+    </div>
+    <div class="commentary"><p>Your error message is a little confusing here, since in the context of this function you're not actually requesting anything again.</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>30</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>31</span></div>
+      <pre><code class="language-python"># Function to Get Image Link from Flickr</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>32</span></div>
+      <pre><code class="language-python">def get_FlickrImage(flickrLink):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>33</span></div>
+      <pre><code class="language-python">	imageHTML = requests.get(flickrLink)	</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>34</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>35</span></div>
+      <pre><code class="language-python">	# Find image link in source.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>36</span></div>
+      <pre><code class="language-python">	imageURL = re.findall(r"""</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>37</span></div>
+      <pre><code class="language-python">				farm</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>38</span></div>
+      <pre><code class="language-python">				[^":]*</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>39</span></div>
+      <pre><code class="language-python">				_[o|k|h|b]\.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>40</span></div>
+      <pre><code class="language-python">				[jpg|png|gif]*</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>41</span></div>
+      <pre><code class="language-python">				""", imageHTML.text, re.VERBOSE)[0]</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>42</span></div>
+      <pre><code class="language-python">	imageURL = 'https://' + imageURL</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>43</span></div>
+      <pre><code class="language-python">	imageURL = imageURL.replace('\\','')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>44</span></div>
+      <pre><code class="language-python">	return imageURL</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>45</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>46</span></div>
+      <pre><code class="language-python"># Function to download pictures off any JSON Reddit page</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>47</span></div>
+      <pre><code class="language-python">def download_RedditJSON(json):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>48</span></div>
+      <pre><code class="language-python">	for i in range(len(json['data']['children'])):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>49</span></div>
+      <pre><code class="language-python">		name = json['data']['children'][i]['data']['title'] + '.jpg'</code></pre>
+    </div>
+    <div class="commentary"><p>Rather then explicitly indexing, just foreach over the list directly:</p>
+<pre><code class="language-python">for post in json[&#39;data&#39;][&#39;children&#39;]:
+    name = post[&#39;data&#39;][&#39;title&#39;] + jpg
+    
+    # ...</code></pre></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>50</span></div>
+      <pre><code class="language-python">		name = remove(name)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>51</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>52</span></div>
+      <pre><code class="language-python">		print('Saving: ', name.encode("utf-8"))</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>53</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>54</span></div>
+      <pre><code class="language-python">		# Check if file is already downloaded.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>55</span></div>
+      <pre><code class="language-python">		if name not in images:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>56</span></div>
+      <pre><code class="language-python">			imageURL = json['data']['children'][i]['data']['url']</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>57</span></div>
+      <pre><code class="language-python">			</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>58</span></div>
+      <pre><code class="language-python">			# Change imgur links that only link to website and not actual image.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>59</span></div>
+      <pre><code class="language-python">			if 'imgur' in imageURL and 'i.imgur' not in imageURL:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>60</span></div>
+      <pre><code class="language-python">				imageURL = add_ImgurExt(imageURL)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>61</span></div>
+      <pre><code class="language-python">			if 'flickr' in imageURL and not imageURL.endswith('.jpg'):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>62</span></div>
+      <pre><code class="language-python">				imageURL = get_FlickrImage(imageURL)</code></pre>
+    </div>
+    <div class="commentary"><p>It might be a good idea to try refactoring lines 59-62 into a seperate helper function.</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>63</span></div>
+      <pre><code class="language-python">			try:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>64</span></div>
+      <pre><code class="language-python">				imageJPEG = requests.get(imageURL)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>65</span></div>
+      <pre><code class="language-python">				imageJPEG.raise_for_status()</code></pre>
+    </div>
+    <div class="commentary"><p>You've done this same pattern (send an HTTP GET request, then raise for the status) a few times now. It might be good to refactor this as well. (That way, you can also keep your user agent code in one place).</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>66</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>67</span></div>
+      <pre><code class="language-python">				# Download only for files with .jpg extension </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>68</span></div>
+      <pre><code class="language-python">				if imageURL.endswith('.jpg'):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>69</span></div>
+      <pre><code class="language-python">					with open(name, 'wb') as f:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>70</span></div>
+      <pre><code class="language-python">						for chunk in imageJPEG.iter_content(100000):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>71</span></div>
+      <pre><code class="language-python">							f.write(chunk)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>72</span></div>
+      <pre><code class="language-python">					print('Successfullly saved file!')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>73</span></div>
+      <pre><code class="language-python">				else:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>74</span></div>
+      <pre><code class="language-python">					print(imageURL)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>75</span></div>
+      <pre><code class="language-python">					print('No .jpg link provided')</code></pre>
+    </div>
+    <div class="commentary"><p>Likewise, consider refactoring lines 64 through 75.</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>76</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>77</span></div>
+      <pre><code class="language-python">			except requests.exceptions.ConnectionError:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>78</span></div>
+      <pre><code class="language-python">				print('Connection to Image Site Timed Out')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>79</span></div>
+      <pre><code class="language-python">			except requests.HTTPError:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>80</span></div>
+      <pre><code class="language-python">				print('Too many requests')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>81</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"><p>Rather then spamming the website and catching exceptions, it <em>may</em> be cleaner to instead research and find out what the rate limits for imgur and flickr are and explicitly add in a delay to avoid running afoul of those rate limits.</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>82</span></div>
+      <pre><code class="language-python">		else:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>83</span></div>
+      <pre><code class="language-python">			print('Image already exists!')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>84</span></div>
+      <pre><code class="language-python">		print()</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>85</span></div>
+      <pre><code class="language-python">		print(''.center(80,'-'), end = '\n')		</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>86</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>87</span></div>
+      <pre><code class="language-python"># Fucntion to create thread for subreddit that begins download</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>88</span></div>
+      <pre><code class="language-python">def createThread(subreddit):</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>89</span></div>
+      <pre><code class="language-python">	json = get_RedditJSON(subreddit)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>90</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>91</span></div>
+      <pre><code class="language-python">	# Occasionaly, Reddit returns None for JSON. Wait and call again.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>92</span></div>
+      <pre><code class="language-python">	while json == None:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>93</span></div>
+      <pre><code class="language-python">		time.sleep(3)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>94</span></div>
+      <pre><code class="language-python">		json = get_RedditJSON(subreddit)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>95</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>96</span></div>
+      <pre><code class="language-python">	thread = threading.Thread(target = download_RedditJSON, args = [json])</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>97</span></div>
+      <pre><code class="language-python">	thread.start()</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>98</span></div>
+      <pre><code class="language-python">	return thread</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>99</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>100</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>101</span></div>
+      <pre><code class="language-python"># Print start time.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>102</span></div>
+      <pre><code class="language-python">startTime = time.time()</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>103</span></div>
+      <pre><code class="language-python">startTimeP = datetime.datetime.fromtimestamp(startTime).strftime('%Y/%m/%d %H:%M:%S')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>104</span></div>
+      <pre><code class="language-python">print('\n\n')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>105</span></div>
+      <pre><code class="language-python">print(('Starting download at: '+ startTimeP).center(80, '*'), end= '\n')</code></pre>
+    </div>
+    <div class="commentary"><p>Note that this line is doing basically the same thing as line 85 -- you should consider refactoring this out int oa separate helper.</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>106</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>107</span></div>
+      <pre><code class="language-python"># Setup place to download files to.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>108</span></div>
+      <pre><code class="language-python">os.makedirs('C:\\Users\\Leo\\Pictures\\Earth and Village Porn', exist_ok = True)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>109</span></div>
+      <pre><code class="language-python">os.chdir('C:\\Users\\Leo\\Pictures\\Earth and Village Porn')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>110</span></div>
+      <pre><code class="language-python">images = os.listdir('.')</code></pre>
+    </div>
+    <div class="commentary"><p>Just as a note -- when making folder and file names, especially ones you intend on interacting with programatically, you should avoid including spaces in your file paths whenever possible.</p>
+<p>If you're running programs on the command line, you have to escape or explicitly quote any paths that include spaces, which can be a bit of a pain in the ass.</p>
+<p>In this case, including spaces isn't really terribly important, but it's good to keep this in mind.</p>
+<p>(Also, consider refactoring lines 108-110, since they appear to be doing a concrete task).</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>111</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>112</span></div>
+      <pre><code class="language-python"># List of subreddits to download.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>113</span></div>
+      <pre><code class="language-python">subreddits = []</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>114</span></div>
+      <pre><code class="language-python">subreddits.append(createThread('earthporn'))</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>115</span></div>
+      <pre><code class="language-python">subreddits.append(createThread('villageporn'))</code></pre>
+    </div>
+    <div class="commentary"><p>Rather then creating a separate thread per subreddit, a different strategy might be to first split the images up into imgur links and flickr links, and launch a separate thread to deal with each website separately. That way, you can explicitly control how frequently you hit each website + won't run afoul of the rate limits.</p>
+<p>(From a design perspective, it'll also force you to separate the task of transforming a url into a image link and actually downloading said image, which is good).</p>
+<p>Also, it might be nice to include a constant at the top of the file that includes the subreddits you want to visit, then use a list comprehension here. Example:</p>
+<pre><code class="language-python">SUBREDDIT_NAMES = [&#39;earthporn&#39;, &#39;villageporn&#39;]
+
+# ...
+
+subreddits = [createThread(name) for name in SUBREDDIT_NAMES]</code></pre></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>116</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>117</span></div>
+      <pre><code class="language-python"># Wait for all threads to finish.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>118</span></div>
+      <pre><code class="language-python">for thread in subreddits:</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>119</span></div>
+      <pre><code class="language-python">	thread.join()</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>120</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>121</span></div>
+      <pre><code class="language-python"># Print how long downloading took.</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>122</span></div>
+      <pre><code class="language-python">print('\n')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>123</span></div>
+      <pre><code class="language-python">endTime = time.time()</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>124</span></div>
+      <pre><code class="language-python">print(('Downloading took: ' + str(round(endTime-startTime, 2)) + ' seconds.').center(80,'*'))</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>125</span></div>
+      <pre><code class="language-python">print('Everthing is saved!'.center(80,'*'))</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>126</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>127</span></div>
+      <pre><code class="language-python"># Log the download time in text file</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>128</span></div>
+      <pre><code class="language-python">logFile = open('Log.txt','a')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>129</span></div>
+      <pre><code class="language-python">logFile.write('\nStarted download at: '+ startTimeP)</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>130</span></div>
+      <pre><code class="language-python">logFile.write('\nDownloading took: ' + str(round(endTime-startTime, 2)) + ' seconds.')</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>131</span></div>
+      <pre><code class="language-python">logFile.write('\n'+''.center(80,'-'))</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>132</span></div>
+      <pre><code class="language-python">logFile.close()</code></pre>
+    </div>
+    <div class="commentary"><p>When programming, you'll often run into the following pattern:</p>
+<pre><code class="language-python">open/setup
+do something
+close/cleanup</code></pre>
+<p>You can see this sort of pattern from anything ranging from interacting with databases, to sockets, to files. As it turns out, always having to open then remember to close gets a bit tedious (and easy to forget to do).</p>
+<p>The Python developers saw that this was such a common pattern that they came up with a feature explicitly designed to help remove this boiler plate. This feature is called a <em>context manager</em>. It looks sort of like this:</p>
+<pre><code class="language-python">with [open/setup something] as handle:
+    do something
+# automatically closed/cleaned up</code></pre>
+<p>More specifically, when reading and writing from a file, you can use context managers like so:</p>
+<pre><code class="language-python">with open(&#39;Log.txt&#39;, &#39;a&#39;) as logFile:
+    logFile.write(&#39;\nStarted download at: &#39;+ startTimeP)
+    logFile.write(&#39;\nDownloading took: &#39; + str(round(endTime-startTime, 2)) + &#39; seconds.&#39;)
+    logFile.write(&#39;\n&#39;+&#39;&#39;.center(80,&#39;-&#39;))</code></pre>
+<p>Once you leave the <code>with</code> block, the file will automatically be closed for you. Generally, it is strongly recommended that you use this form whenever possible, unless you have an explicit reason as to why you can't.</p>
+<p>(As it turns out, Java also has a similar language feature called <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/language/try-with-resources.html">try-with-resources</a>)</p></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>133</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line not-annotated">
+    <div class="codeline">
+      <div class="lineno"><span>134</span></div>
+      <pre><code class="language-python"># Set up Task Scheduler so script runs daily</code></pre>
+    </div>
+    <div class="commentary"></div>
+  </div>
+  <div class="line annotated">
+    <div class="codeline">
+      <div class="lineno"><span>135</span></div>
+      <pre><code class="language-python"> </code></pre>
+    </div>
+    <div class="commentary"><p>In Python, when you want to run some code in a file, the usual convention is to structure your code as follows:</p>
+<pre><code class="language-python"># helper functions and classes here
+
+def main():
+    # code here
+    
+if __name__ == &#39;__main__&#39;:
+    main()</code></pre>
+<p>Basically, have everything inside the main method, and call it within that if statement. What exactly that if statement does looks a bit confusing, but what it basically does is run the <code>main()</code> function if and only if you're running your python script directly. (If you import the script as a library, the main function won't be automatically executed).</p>
+<p>More specifically, the <code>__name__</code> variable is a variable that is automatically set by the Python interpreter. If you do <code>python my_file.py</code> from the command line, the <code>__name__</code> variable inside <code>my_file.py</code> will be set to the string <code>'__main__'</code>. In contrast, if you were to import <code>my_file</code> from some other script, the <code>__name__</code> variable inside <code>my_file</code> when it's being imported will be set to something else.</p>
+<p>What this idiom does is let your file be used both as something you can directly run, and as a library, where you don't want to automatically run code..</p></div>
+  </div></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/0.0.1/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    function createButton(element) {
+      var button = $('<div class="button"><span>Hide</span></div>');
+      button.click(function() {
+        element.toggle(250);
+        if (button.text() == "Hide") {
+          button.html("<span>Show</span>");
+        } else {
+          button.html("<span>Hide</span>");
+        }
+      });
+      return button;
+    }
+  
+    function insertToggle(index, element) {
+      $(element).before(createButton($(element)));
+    }
+  
+    $(".annotated .commentary").each(insertToggle);
+  });
+</script>
+</body>
+</html>
